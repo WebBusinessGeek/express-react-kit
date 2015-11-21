@@ -10,34 +10,46 @@ var minifyCSS = require("gulp-minify-css");
 var pathReference = {
     appEntryPoints: ["app/app.entryPoint.js"],
     buildJSFile: "app-build.js",
-    buildCSSFile: "app-build.css",
-    buildDir: "build",
-    devCSSDir: "src/styling/**/*",
+    buildCSSFile: "app-style.css",
+    buildDir: "app/build",
+    devCSSDir: "app/styling/**/*",
     cssStylingFrameworkSource: "node_modules/bootstrap/dist/css/bootstrap.min.css",
     cssStylingFrameworkBuild: "styling-framework.css",
     jsStylingFrameworkSource: "node_modules/bootstrap/dist/js/bootstrap.min.js",
     jsStylingFrameworkBuild: "styling-framework.js"
 };
 
-gulp.task("runOnceOnly", shell.task([
+var browserifyConfig = browserify({
+    entries: [pathReference.appEntryPoints],
+    transform: [reactify],
+    debug: true,
+    cache: {}, packageCache: {}, fullPaths: true
+});
+
+gulp.task("createPrivateFiles", shell.task([
     "touch app/private/databaseSecrets.js app/private/appSecrets.js",
     "echo exports.databaseUri = '\"mongoose db uri goes here\";' > app/private/databaseSecrets.js",
     "echo exports.tokenSecret = '\"secret for jwt goes here\";' > app/private/appSecrets.js",
+    "echo Remember to add private secrets before you run '\"npm test\"'"
+]));
+
+gulp.task("copyStylingFrameworksToBuild", shell.task([
     "cp " + pathReference.cssStylingFrameworkSource + " " + pathReference.buildDir + "/" + pathReference.cssStylingFrameworkBuild,
-    "cp " + pathReference.jsStylingFrameworkSource + " " + pathReference.buildDir + "/" + pathReference.jsStylingFrameworkBuild,
-    "echo Project has been setup. Add private secrets and then run '\"npm test\"'"
+    "cp " + pathReference.jsStylingFrameworkSource + " " + pathReference.buildDir + "/" + pathReference.jsStylingFrameworkBuild
 ]));
 
-
-
-
-
-
-
-gulp.task("setup", shell.task([
+gulp.task("epr", shell.task([
     "node_modules/.bin/epr"
-
 ]));
+
+gulp.task("minifyCSS", function() {
+    gulp.src(pathReference.devCSSDir)
+        .pipe(minifyCSS())
+        .pipe(concat(pathReference.buildCSSFile))
+        .pipe(gulp.dest(pathReference.buildDir));
+});
+
+
 
 
 
@@ -66,13 +78,3 @@ gulp.task("watch", function() {
         .pipe(gulp.dest(pathReference.buildDir));
 });
 
-gulp.task("frameworkSourceBuild", shell.task([
-    "cp " + pathReference.cssStylingFrameworkSource + " " + pathReference.buildDir + "/" + pathReference.cssStylingFrameworkBuild
-]));
-
-gulp.task("minifyCSS", function() {
-    gulp.src(pathReference.devCSSDir)
-        .pipe(minifyCSS())
-        .pipe(concat(pathReference.buildCSSFile))
-        .pipe(gulp.dest(pathReference.buildDir));
-});
