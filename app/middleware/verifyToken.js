@@ -3,7 +3,7 @@ var httpResponses = require("constants/httpResponses");
 var tokenSecret = require("private/appSecrets").tokenSecret;
 var jwt = require("jsonwebtoken");
 var RevokedToken = require("resources/revokedTokens/model");
-var httpResponder = require("shared/httpResponder");
+var httpResponder = require("lib/httpResponder");
 var serverStatics = require("constants/serverStatics");
 
 router.use(function(req, res, next) {

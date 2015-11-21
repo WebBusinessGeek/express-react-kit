@@ -1,6 +1,6 @@
 var app = require("express")();
 var httpResponses = require("constants/httpResponses");
-var httpResponder = require("shared/httpResponder");
+var httpResponder = require("lib/httpResponder");
 var endpoints = require("constants/endpoints");
 
 
@@ -15,6 +15,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 
 
+/*
+
+react repo app.js code that must be integrated
+
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -23,13 +27,22 @@ app.use(function(req, res, next) {
 
 app.use(express.static(__dirname + "/build"));
 
-/*Serve the index.html file*/
+/!*Serve the index.html file*!/
 app.get("/", function(req, res) {
     res.sendFile(__dirname + "/index.html");
-    /*res.json({
+    /!*res.json({
      message: "working"
-     });*/
+     });*!/
 });
+
+ //404 catchall
+app.use("/", function(req, res) {
+    res.json({
+        message: "Server 404 page"
+    })
+});
+
+*/
 
 
 
@@ -38,18 +51,13 @@ app.get("/", function(req, res) {
 
 
 
-/*404 catchall*/
-app.use("/", function(req, res) {
-    res.json({
-        message: "Server 404 page"
-    })
-});
+
 
 
 
 //user Bootstrap Routes
 var userEndpoint = exports.usersEndpoint = endpoints.usersEndpoint;
-var userBootstrapRoutes = require("resources/users/bootstrapRoutes");
+var userBootstrapRoutes = require("resources/users/routes");
 app.use(userEndpoint, userBootstrapRoutes);
 
 //Routes for testing

@@ -5,11 +5,11 @@ var Route = ReactRouter.Route;
 var createBrowserHistory = require("history/lib/createBrowserHistory");
 
 
-var helloPage = require("./pages/hello");
-var notFoundPage = require("./pages/notFound");
-var loginPage = require("./pages/login");
-var registerPage = require("./pages/register");
-var dashboardPage = require("./pages/dashboard");
+var helloPage = require("pages/hello");
+var notFoundPage = require("pages/notFound");
+var loginPage = require("pages/login");
+var registerPage = require("pages/register");
+var dashboardPage = require("pages/dashboard");
 
 /*Routes*/
 var routes = (

@@ -7,18 +7,22 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "nodemon node_modules/mocha/bin/mocha --watch app --watch test",
     "start": "node server.js"
   },
   "epr": {
-    "bootstrap": "app/bootstrap",
-    "constants": "app/constants",
+    "app" : "app/app.js",
+    "entryPoint" : "app/entryPoint.js",
+    "routes" : "app/routes.js",
+    "constants" : "app/constants",
+    "lib" : "app/lib",
+    "middleware" : "app/middleware",
+    "pages" : "app/pages",
     "private": "app/private",
-    "middleware": "app/middleware",
-    "resources": "app/resources",
-    "shared": "app/shared",
-    "test-helpers": "test/helpers",
-    "testHelpers": "test/helpers"
+    "resources" : "app/resources",
+    "styling" : "app/styling",
+    "uiComponents" : "app/uiComponents",
+    "testHelpers" : "test/testHelpers"
   },
   "config": {
     "blanket": {

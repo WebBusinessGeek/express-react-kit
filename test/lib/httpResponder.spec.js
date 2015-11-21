@@ -1,4 +1,4 @@
-var httpResponder = require("shared/httpResponder");
+var httpResponder = require("lib/httpResponder");
 var httpResponses = require("constants/httpResponses");
 var assert = require("chai").assert;
 var mimic = require("testHelpers/mimic");
@@ -53,7 +53,7 @@ describe("httpResponder", function() {
     describe("respondToFailedRequest method", function() {
         it("should return a hard coded failure status, flexible status code, and flexible data object with a message", function() {
             var message = mimic.randomString;
-            
+
             var statusCode = httpResponses.successOKStatusCode;
 
             var status = httpResponses.failureResponseStatus;
