@@ -1,0 +1,10 @@
+#loginForm {
+    position:relative;
+    top: 100px;
+    height: 400px;
+    padding: 100px;
+}
+
+#loginForm {
+    background: #286090;
+}

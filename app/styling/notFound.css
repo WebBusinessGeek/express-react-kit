@@ -1,0 +1,20 @@
+#registerForm {
+    position:relative;
+    top: 100px;
+    height: 400px;
+    padding: 100px;
+}
+
+#registerForm {
+    background: #449D44;
+}
+
+#errorMessageContainer {
+    background: #880000;
+    color: #fff;
+    padding: 10px;
+}
+
+#errorMessage {
+    font-size: 20px;
+}

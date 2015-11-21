@@ -1,0 +1,11 @@
+#Build Dir
+app/build/*
+
+#node_modules
+node_modules/*
+
+#IDE dir
+.idea/*
+
+#Test coverage
+test/coverage.html

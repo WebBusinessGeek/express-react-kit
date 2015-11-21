@@ -1,0 +1,61 @@
+{
+  "name": "expressReactKit",
+  "version": "0.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "epr": {
+    "bootstrap": "app/bootstrap",
+    "constants": "app/constants",
+    "private": "app/private",
+    "middleware": "app/middleware",
+    "resources": "app/resources",
+    "shared": "app/shared",
+    "test-helpers": "test/helpers",
+    "testHelpers": "test/helpers"
+  },
+  "config": {
+    "blanket": {
+      "pattern": "app",
+      "data-cover-never": "node_modules"
+    }
+  },
+  "dependencies": {
+    "express": "~4.13.3",
+    "body-parser": "~1.14.1",
+    "multer": "~1.1.0",
+    "mongoose": "~4.2.4",
+    "validator": "~4.2.1",
+    "password-hash": "~1.2.2",
+    "react-dom": "~0.14.2",
+    "react": "~0.14.2",
+    "react-router": "~1.0.0",
+    "history": "~1.13.1",
+    "epr": "~1.0.0",
+    "bootstrap": "~3.3.5",
+    "jsonwebtoken": "~5.4.1",
+    "chai": "~3.4.0",
+    "superagent": "~1.4.0",
+    "mocha": "~2.3.3",
+    "gulp-shell": "~0.5.1",
+    "gulp-concat": "~2.6.0",
+    "gulp-minify-css": "~1.2.1",
+    "gulp": "~3.9.0",
+    "reactify": "~1.1.1",
+    "watchify": "~3.6.1",
+    "browserify": "~12.0.1",
+    "vinyl-source-stream": "~1.1.0",
+    "nodemon": "~1.8.1",
+    "blanket": "~1.2.1",
+    "jquery": "~2.1.4"
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC"
+}
