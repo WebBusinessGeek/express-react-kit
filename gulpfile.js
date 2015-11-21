@@ -1,16 +1,5 @@
-/*from node repo.. obviously*/
 var gulp = require("gulp");
 var shell = require("gulp-shell");
-
-gulp.task("setup", shell.task([
-    "node_modules/.bin/epr",
-    "touch app/private/databaseSecrets.js app/private/appSecrets.js",
-    "echo exports.databaseUri = '\"mongoose db uri goes here\";' > app/private/databaseSecrets.js",
-    "echo exports.tokenSecret = '\"secret for jwt goes here\";' > app/private/appSecrets.js",
-    "echo Project has been setup. Add private secrets and then run '\"npm test\"'"
-]));
-
-/*from react repo */
 var browserify = require("browserify");
 var watchify = require("watchify");
 var reactify = require("reactify");
@@ -19,14 +8,39 @@ var concat = require("gulp-concat");
 var minifyCSS = require("gulp-minify-css");
 
 var pathReference = {
-    appEntryPoints: ["src/app.js"],
+    appEntryPoints: ["app/app.entryPoint.js"],
     buildJSFile: "app-build.js",
     buildCSSFile: "app-build.css",
     buildDir: "build",
     devCSSDir: "src/styling/**/*",
-    cssFrameworkSource: "node_modules/bootstrap/dist/css/bootstrap.min.css",
-    cssFrameworkBuild: "css-framework.css"
+    cssStylingFrameworkSource: "node_modules/bootstrap/dist/css/bootstrap.min.css",
+    cssStylingFrameworkBuild: "styling-framework.css",
+    jsStylingFrameworkSource: "node_modules/bootstrap/dist/js/bootstrap.min.js",
+    jsStylingFrameworkBuild: "styling-framework.js"
 };
+
+gulp.task("runOnceOnly", shell.task([
+    "touch app/private/databaseSecrets.js app/private/appSecrets.js",
+    "echo exports.databaseUri = '\"mongoose db uri goes here\";' > app/private/databaseSecrets.js",
+    "echo exports.tokenSecret = '\"secret for jwt goes here\";' > app/private/appSecrets.js",
+    "cp " + pathReference.cssStylingFrameworkSource + " " + pathReference.buildDir + "/" + pathReference.cssStylingFrameworkBuild,
+    "cp " + pathReference.jsStylingFrameworkSource + " " + pathReference.buildDir + "/" + pathReference.jsStylingFrameworkBuild,
+    "echo Project has been setup. Add private secrets and then run '\"npm test\"'"
+]));
+
+
+
+
+
+
+
+gulp.task("setup", shell.task([
+    "node_modules/.bin/epr"
+
+]));
+
+
+
 
 gulp.task("watch", function() {
 
@@ -53,7 +67,7 @@ gulp.task("watch", function() {
 });
 
 gulp.task("frameworkSourceBuild", shell.task([
-    "cp " + pathReference.cssFrameworkSource + " " + pathReference.buildDir + "/" + pathReference.cssFrameworkBuild
+    "cp " + pathReference.cssStylingFrameworkSource + " " + pathReference.buildDir + "/" + pathReference.cssStylingFrameworkBuild
 ]));
 
 gulp.task("minifyCSS", function() {
