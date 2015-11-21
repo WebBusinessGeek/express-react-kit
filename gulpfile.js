@@ -49,6 +49,10 @@ gulp.task("minifyCSS", function() {
         .pipe(gulp.dest(pathReference.buildDir));
 });
 
+gulp.task("runRecurringServer", shell.task([
+    "nodemon server.js"
+]));
+
 
 gulp.task("watch", function() {
 
