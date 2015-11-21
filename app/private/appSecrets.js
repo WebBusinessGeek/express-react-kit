@@ -1,1 +1,1 @@
-exports.tokenSecret = "tokenSecret";
+exports.tokenSecret = "secret for jwt goes here";

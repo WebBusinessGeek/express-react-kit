@@ -8,7 +8,7 @@ var concat = require("gulp-concat");
 var minifyCSS = require("gulp-minify-css");
 
 var pathReference = {
-    appEntryPoints: ["app/app.entryPoint.js"],
+    appEntryPoints: ["app/entryPoint.js"],
     buildJSFile: "app-build.js",
     buildCSSFile: "app-style.css",
     buildDir: "app/build",
@@ -16,15 +16,11 @@ var pathReference = {
     cssStylingFrameworkSource: "node_modules/bootstrap/dist/css/bootstrap.min.css",
     cssStylingFrameworkBuild: "styling-framework.css",
     jsStylingFrameworkSource: "node_modules/bootstrap/dist/js/bootstrap.min.js",
-    jsStylingFrameworkBuild: "styling-framework.js"
+    jsStylingFrameworkBuild: "styling-framework.js",
+    packageJson: "package.json"
 };
 
-var browserifyConfig = browserify({
-    entries: [pathReference.appEntryPoints],
-    transform: [reactify],
-    debug: true,
-    cache: {}, packageCache: {}, fullPaths: true
-});
+
 
 gulp.task("createPrivateFiles", shell.task([
     "touch app/private/databaseSecrets.js app/private/appSecrets.js",
@@ -39,7 +35,8 @@ gulp.task("copyStylingFrameworksToBuild", shell.task([
 ]));
 
 gulp.task("epr", shell.task([
-    "node_modules/.bin/epr"
+    "node_modules/.bin/epr",
+    "echo epr updated."
 ]));
 
 gulp.task("minifyCSS", function() {
@@ -47,23 +44,31 @@ gulp.task("minifyCSS", function() {
         .pipe(minifyCSS())
         .pipe(concat(pathReference.buildCSSFile))
         .pipe(gulp.dest(pathReference.buildDir));
+    console.log("css minified.");
 });
 
 gulp.task("runRecurringServer", shell.task([
     "nodemon server.js"
 ]));
 
+var browserifyConfig = browserify({
+    entries: [pathReference.appEntryPoints],
+    transform: [reactify],
+    debug: true,
+    cache: {}, packageCache: {}, fullPaths: true
+});
+
+gulp.task("transformReactCode", function() {
+
+    return browserifyConfig.bundle()
+        .pipe(source(pathReference.buildJSFile))
+        .pipe(gulp.dest(pathReference.buildDir));
+});
 
 gulp.task("watch", function() {
 
     gulp.watch(pathReference.devCSSDir, ['minifyCSS']);
-
-    var browserifyConfig = browserify({
-        entries: [pathReference.appEntryPoints],
-        transform: [reactify],
-        debug: true,
-        cache: {}, packageCache: {}, fullPaths: true
-    });
+    gulp.watch(pathReference.packageJson, ["epr"]);
 
     var watcher = watchify(browserifyConfig);
 
@@ -71,10 +76,16 @@ gulp.task("watch", function() {
         watcher.bundle()
             .pipe(source(pathReference.buildJSFile))
             .pipe(gulp.dest(pathReference.buildDir));
-        console.log("updated");
+        console.log("react code updated");
     })
         .bundle()
         .pipe(source(pathReference.buildJSFile))
         .pipe(gulp.dest(pathReference.buildDir));
 });
 
+gulp.task("test", shell.task([
+    "nodemon node_modules/mocha/bin/mocha --watch app --watch test"
+]));
+
+gulp.task("setup", ["epr", "createPrivateFiles", "copyStylingFrameworksToBuild", "minifyCSS", "transformReactCode"]);
+gulp.task("develop", ["watch"]);

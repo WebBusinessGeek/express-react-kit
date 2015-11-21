@@ -27,13 +27,7 @@ app.use(function(req, res, next) {
 
 app.use(express.static(__dirname + "/build"));
 
-/!*Serve the index.html file*!/
-app.get("/", function(req, res) {
-    res.sendFile(__dirname + "/index.html");
-    /!*res.json({
-     message: "working"
-     });*!/
-});
+
 
  //404 catchall
 app.use("/", function(req, res) {
@@ -52,6 +46,12 @@ app.use("/", function(req, res) {
 
 
 
+app.get("/", function(req, res) {
+    res.sendFile("/index.html");
+    res.json({
+        message: "working"
+    });
+});
 
 
 

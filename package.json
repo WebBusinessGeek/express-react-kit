@@ -7,8 +7,12 @@
     "test": "test"
   },
   "scripts": {
-    "test": "nodemon node_modules/mocha/bin/mocha --watch app --watch test",
-    "start": "node server.js"
+    "setup" : "gulp setup",
+    "test": "gulp test",
+    "dev-server" : "gulp runRecurringServer",
+    "devServer" : "gulp runRecurringServer",
+    "start": "node server.js",
+    "develop" : "gulp develop"
   },
   "epr": {
     "app" : "app/app.js",
