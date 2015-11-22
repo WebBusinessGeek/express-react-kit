@@ -18,6 +18,7 @@
     "app" : "app/app.js",
     "entryPoint" : "app/entryPoint.js",
     "routes" : "app/routes.js",
+    "appRoot" : "appRoot.js",
     "constants" : "app/constants",
     "lib" : "app/lib",
     "middleware" : "app/middleware",
