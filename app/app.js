@@ -54,6 +54,12 @@ var verifyTokenMiddleware = require("middleware/verifyToken");
 app.use(endpoints.rootEndpoint, verifyTokenMiddleware);
 /*Define all routes that need authentication after this line*/
 
+app.use("/checkToken", function(req, res){
+    return res.json(
+        httpResponder.respondToOKRequest("token is valid")
+    );
+});
+
 /*AUTH needed test route*/
 app.post(this.authMiddlewareTestingEndpoint, function(req,res) {
     return res.json(
