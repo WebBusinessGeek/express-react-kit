@@ -9,3 +9,7 @@ node_modules/*
 
 #Test coverage
 test/coverage.html
+
+#DS_Store
+.DS_Store
+
