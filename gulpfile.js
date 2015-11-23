@@ -17,6 +17,8 @@ var pathReference = {
     cssStylingFrameworkBuild: "styling-framework.css",
     jsStylingFrameworkSource: "node_modules/bootstrap/dist/js/bootstrap.min.js",
     jsStylingFrameworkBuild: "styling-framework.js",
+    jQueryFrameworkSource: "node_modules/jquery/dist/jquery.min.js",
+    jQueryFrameworkBuild: "jquery.js",
     packageJson: "package.json"
 };
 
@@ -32,6 +34,10 @@ gulp.task("createPrivateFiles", shell.task([
 gulp.task("copyStylingFrameworksToBuild", shell.task([
     "cp " + pathReference.cssStylingFrameworkSource + " " + pathReference.buildDir + "/" + pathReference.cssStylingFrameworkBuild,
     "cp " + pathReference.jsStylingFrameworkSource + " " + pathReference.buildDir + "/" + pathReference.jsStylingFrameworkBuild
+]));
+
+gulp.task("copyJQuerySourceToBuild", shell.task([
+    "cp " + pathReference.jQueryFrameworkSource + " " + pathReference.buildDir + "/" + pathReference.jQueryFrameworkBuild
 ]));
 
 gulp.task("epr", shell.task([
@@ -87,5 +93,5 @@ gulp.task("test", shell.task([
     "nodemon node_modules/mocha/bin/mocha --watch app --watch test"
 ]));
 
-gulp.task("setup", ["epr", "createPrivateFiles", "copyStylingFrameworksToBuild", "minifyCSS", "transformReactCode"]);
+gulp.task("setup", ["epr", "createPrivateFiles", "copyStylingFrameworksToBuild", "copyJQuerySourceToBuild", "minifyCSS", "transformReactCode"]);
 gulp.task("develop", ["watch"]);
