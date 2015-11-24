@@ -90,7 +90,7 @@ gulp.task("watch", function() {
 });
 
 gulp.task("test", shell.task([
-    "nodemon node_modules/mocha/bin/mocha --watch app --watch test"
+    "nodemon node_modules/mocha/bin/mocha --compilers js:babel-core/register --watch app --watch test"
 ]));
 
 gulp.task("setup", ["epr", "createPrivateFiles", "copyStylingFrameworksToBuild", "copyJQuerySourceToBuild", "minifyCSS", "transformReactCode"]);
