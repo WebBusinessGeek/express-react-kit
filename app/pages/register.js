@@ -35,9 +35,13 @@ var RegisterPage = React.createClass({
     },
 
     handleSubmit: function(e) {
-        e.preventDefault();
+        if(e) {
+            e.preventDefault();
+        }
 
-        var email = this.refs.emailInput.value.trim();
+        var email = $("#userEmail").val();
+        return email;
+        /*var email = this.refs.emailInput.value.trim();
         var password = this.refs.passwordInput.value.trim();
 
         var dataToSend = {
@@ -60,7 +64,7 @@ var RegisterPage = React.createClass({
             error: function(xhr, status, err) {
                 console.log(err);
             }
-        });
+        });*/
     },
 
     getInitialState: function() {

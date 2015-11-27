@@ -5,10 +5,14 @@ var assert = require("chai").assert;
 
 exports.assert = assert;
 
-exports.renderAndGetOutput = function(component) {
-    var renderer = TestUtils.createRenderer();
+exports.renderAndGetOutput = function(component, refs) {
+    var renderer = this.returnRenderer();
     renderer.render(component);
     return renderer.getRenderOutput();
+};
+
+exports.returnRenderer = function() {
+    return TestUtils.createRenderer();
 };
 
 
