@@ -3,17 +3,17 @@ var $ = require("jquery");
 
 var RegisterPage = React.createClass({
 
-    handleFailedSubmit: function(responseMessage) {
+    handleFailedSubmit: function(responseMessage, cb) {
         this.setState({
             shouldShowErrorMessage: true,
             errorMessage: responseMessage
-        });
+        }, cb);
     },
 
-    handleSuccessfulSubmit: function(responseMessage, credentials) {
+    handleSuccessfulSubmit: function(responseMessage, credentials, cb) {
         this.setState({
             shouldShowErrorMessage: false
-        });
+        }, cb);
         $.ajax({
             url: "http://localhost:8132/users/authenticate",
             dataType: "json",
@@ -34,12 +34,12 @@ var RegisterPage = React.createClass({
         });
     },
 
-    handleSubmit: function(e) {
+    handleSubmit: function(e, cb) {
         if(e){
             e.preventDefault();
         }
-        return "hello";
-        /*var dataToSend = {
+
+        var dataToSend = {
             email: this.refs.emailInput.value.trim(),
             password: this.refs.passwordInput.value.trim()
         };
@@ -51,16 +51,17 @@ var RegisterPage = React.createClass({
             data: dataToSend,
             success: function(response) {
                 if(response.status == "fail") {
-                    this.handleFailedSubmit(response.data.message);
+                    return this.handleFailedSubmit(response.data.message, cb);
                 }
                 else {
-                    this.handleSuccessfulSubmit(response.data.message, dataToSend);
+                    return this.handleSuccessfulSubmit(response.data.message, dataToSend, cb);
                 }
             }.bind(this),
             error: function(xhr, status, err) {
                 console.log(err);
             }
-        });*/
+        });
+
     },
 
     getInitialState: function() {
@@ -75,7 +76,7 @@ var RegisterPage = React.createClass({
         return(
             <div id="registerPageContainer">
 
-                <form id="registerForm" className="form-horizontal col-sm-6 col-sm-offset-3" onSubmit={this.handleSubmit}>
+                <form id="registerForm" className="form-horizontal col-sm-6 col-sm-offset-3" ref="registerForm" onSubmit={this.handleSubmit}>
 
                     { this.state.shouldShowErrorMessage ?
                         <div id="errorMessageContainer" className="col-sm-12 text-center"> <p id="errorMessage"> {this.state.errorMessage} </p> </div>
