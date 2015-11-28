@@ -35,19 +35,15 @@ var RegisterPage = React.createClass({
     },
 
     handleSubmit: function(e) {
-        if(e) {
+        if(e){
             e.preventDefault();
         }
-
-        var email = $("#userEmail").val();
-        return email;
-        /*var email = this.refs.emailInput.value.trim();
-        var password = this.refs.passwordInput.value.trim();
-
-        var dataToSend = {
-            email: email,
-            password: password
+        return "hello";
+        /*var dataToSend = {
+            email: this.refs.emailInput.value.trim(),
+            password: this.refs.passwordInput.value.trim()
         };
+
         $.ajax({
             url: "http://localhost:8132/users/register",
             dataType: "json",
