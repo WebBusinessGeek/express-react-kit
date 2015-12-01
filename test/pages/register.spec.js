@@ -51,6 +51,12 @@ describe("RegisterPage", function() {
             this.spyAttemptToRegister = sinon.spy(this.realComponent, "attemptToRegister");
             this.spyHandleFailedSubmit = sinon.spy(this.realComponent, "handleFailedSubmit");
             this.spyHandleSuccessfulSubmit = sinon.spy(this.realComponent, "handleSuccessfulSubmit");
+            var that = this;
+            spies = [
+                that.spyAttemptToRegister,
+                that.spyHandleFailedSubmit,
+                that.spyHandleSuccessfulSubmit
+            ];
         });
 
         it("should allow values of email and password inputs to change", function() {
@@ -70,11 +76,7 @@ describe("RegisterPage", function() {
 
             var expectedState = {
                 shouldShowErrorMessage : false,
-                errorMessage: null,
-                shouldHandleSuccessfulSubmit: false,
-                shouldHandleFailedSubmit: false,
-                failedReason: null,
-                validCredentials: null
+                errorMessage: null
             };
             ComponentTester.assert.deepEqual(expectedState, this.getCurrentState());
 
@@ -98,52 +100,91 @@ describe("RegisterPage", function() {
                     return ComponentTester.testAsyncMethodSpy(done, "isTrue", component, "spyAttemptToRegister", "calledOnce");
                 };
 
-                console.log("simulating submit...");
                 ComponentTester.TestUtils.Simulate.submit(this.realForm, callback());
-                console.log("submit simulated");
-                /*ComponentTester.assert.isTrue(this.spyAttemptToRegister.calledOnce);
-                done();*/
+
             });
-            it("state should be changed to negative context on bad email", function(done) {
+            it("should call handleFailedSubmit method on bad email", function(done) {
                 this.realEmailInput.value = "bad";
                 this.realPasswordInput.value = "password";
 
                 var component = this;
 
-                /*var callback = function() {
+                var callback = function() {
                     return ComponentTester.testAsyncMethodSpy(done, "isTrue", component, "spyHandleFailedSubmit", "calledOnce");
-                };*/
+                };
+
+                ComponentTester.TestUtils.Simulate.submit(this.realForm, callback());
+
+            });
+            it("should call handleFailedSubmit method on bad password", function(done){
+                this.realEmailInput.value = "goodEmail@email.com";
+                this.realPasswordInput.value = "bad";
+
+                var component = this;
+
+                var callback = function() {
+                    return ComponentTester.testAsyncMethodSpy(done, "isTrue", component, "spyHandleFailedSubmit", "calledOnce");
+                };
+
+                ComponentTester.TestUtils.Simulate.submit(this.realForm, callback());
+
+            });
+            it("should update correct state on bad email submission", function(done) {
+                this.realEmailInput.value = "bad";
+                this.realPasswordInput.value = "password";
+
+                var component = this;
+                var expected = {
+                    shouldShowErrorMessage : true,
+                    errorMessage: "Bad format for email"
+                };
+
+
+                var callback = function() {
+                    return  ComponentTester.testAsyncMethodResultsEqualsExpected(done, "deepEqual", expected, component, "getCurrentState", spies);
+                };
 
                 console.log("simulating submit...");
-                ComponentTester.TestUtils.Simulate.submit(this.realForm, ComponentTester.testAsyncMethodSpy(done, "isTrue", component, "spyHandleFailedSubmit", "calledOnce"));
+                ComponentTester.TestUtils.Simulate.submit(this.realForm, callback());
                 console.log("submit simulated");
 
+            });
+            it("should update correct state on bad password submission", function(done) {
+                this.realEmailInput.value = "goodEmail@email.com";
+                this.realPasswordInput.value = "bad";
 
-                /*
-                function assert() {
-                    setTimeout(laterAssert,2000);
-                }
-                function laterAssert() {
-                    console.log("starting assertion...");
-                    ComponentTester.assert.isTrue(component.spyHandleFailedSubmit.calledOnce);
-                    component.spyHandleFailedSubmit.restore();
-                    console.log("assertion completed");
-                    done();
-                }
+                var component = this;
+                var expected = {
+                    shouldShowErrorMessage : true,
+                    errorMessage: "Bad format for password"
+                };
 
-                function sayHello() {
-                    console.log("hello")
-                }
-                process.nextTick(sayHello);
-
+                var spies = [
+                    component.spyAttemptToRegister,
+                    component.spyHandleFailedSubmit,
+                    component.spyHandleSuccessfulSubmit
+                ];
+                var callback = function() {
+                    return  ComponentTester.testAsyncMethodResultsEqualsExpected(done, "deepEqual", expected, component, "getCurrentState", spies);
+                };
                 console.log("simulating submit...");
-                ComponentTester.TestUtils.Simulate.submit(this.realForm, assert());
+                ComponentTester.TestUtils.Simulate.submit(this.realForm, callback());
                 console.log("submit simulated");
-                */
+            });
+            it("should call handleSuccessfulSubmit method on good credentials", function(done) {
+                this.realEmailInput.value = "goodEmail@email.com";
+                this.realPasswordInput.value = "password";
 
+                var component = this;
 
+                var callback = function() {
+                    return ComponentTester.testAsyncMethodSpy(done, "isTrue", component, "spyHandleSuccessfulSubmit", "calledOnce");
+                };
 
-            })
+                ComponentTester.TestUtils.Simulate.submit(this.realForm, callback());
+
+            });
+
         })
 
 

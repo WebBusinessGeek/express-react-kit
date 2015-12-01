@@ -46,3 +46,24 @@ exports.testAsyncMethodSpy = function(doneCallback, assertion, object, property1
     process.nextTick(delay);
 
 };
+
+exports.testAsyncMethodResultsEqualsExpected = function(doneCallback, equalityAssertion, expected, object, methodToReturnResults, spiesToClear) {
+    function delay() {
+        console.log("delayed response requested");
+        setTimeout(assert, 2000);
+    }
+
+    function assert() {
+        console.log("assertion called to ensure results equal expected");
+        setTimeout(laterAssert, 2000);
+    }
+
+    function laterAssert() {
+        assertions[equalityAssertion](expected, object[methodToReturnResults]());
+        doneCallback();
+    }
+    process.nextTick(delay);
+    for(var count = 0; count < spiesToClear.length; count++) {
+        spiesToClear[count].restore();
+    }
+};

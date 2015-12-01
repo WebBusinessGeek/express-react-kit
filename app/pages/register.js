@@ -4,7 +4,6 @@ var $ = require("jquery");
 var RegisterPage = React.createClass({
 
     attemptToRegister: function(dataToSend) {
-        console.log("attemptToRegister firing");
         $.ajax({
             url: "http://localhost:8132/users/register",
             dataType: "json",
@@ -12,20 +11,14 @@ var RegisterPage = React.createClass({
             data: dataToSend,
             success: function(response) {
                 if(response.status == "success") {
-                    console.log("attemptToRegister successful request");
-                    console.log("email: " + dataToSend.email + " password:  " + dataToSend.password);
-                    console.log("response: " + response.data.message);
+                    this.handleSuccessfulSubmit(dataToSend);
                 }
                 else {
-                    console.log("attemptToRegister successful request but bad data");
-                    console.log("email: " + dataToSend.email + " password:  " + dataToSend.password);
-                    console.log("response: " + response.data.message);
                     this.handleFailedSubmit(response.data.message);
-                    console.log("this.handleFailedSubmit called");
                 }
             }.bind(this),
+
             error: function(xhr, status, err) {
-                console.log("attemptToRegister error sending request");
                 return err;
             }
         });
@@ -35,7 +28,7 @@ var RegisterPage = React.createClass({
         console.log("handleFailedSubmit called");
         this.setState({
             shouldShowErrorMessage: true,
-            errorMessage: this.state.failedReason
+            errorMessage: failedResponseMessage
         });
     },
 
@@ -74,44 +67,12 @@ var RegisterPage = React.createClass({
             password: this.refs.passwordInput.value.trim()
         };
         this.attemptToRegister(dataToSend);
-
-        /*if(attempt = "fail") {
-            return this.handleFailedSubmit("fake");
-        }
-        else {
-            return this.handleSuccessfulSubmit("fake");
-        }*/
-
-
-
-        /*$.ajax({
-            url: "http://localhost:8132/users/register",
-            dataType: "json",
-            type: "POST",
-            data: dataToSend,
-            success: function(response) {
-                if(response.status == "fail") {
-                    return this.handleFailedSubmit(response.data.message);
-                }
-                else {
-                    return this.handleSuccessfulSubmit(response.data.message, dataToSend);
-                }
-            }.bind(this),
-            error: function(xhr, status, err) {
-                console.log(err);
-            }
-        });*/
-
     },
 
     getInitialState: function() {
         return {
             shouldShowErrorMessage : false,
-            errorMessage: null,
-            shouldHandleSuccessfulSubmit: false,
-            shouldHandleFailedSubmit: false,
-            failedReason: null,
-            validCredentials: null
+            errorMessage: null
         }
     },
 
