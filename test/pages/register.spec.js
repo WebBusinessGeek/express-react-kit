@@ -50,8 +50,9 @@ describe("RegisterPage", function() {
 
             this.spyAttemptToRegister = sinon.spy(this.realComponent, "attemptToRegister");
             this.spyHandleFailedSubmit = sinon.spy(this.realComponent, "handleFailedSubmit");
-            this.spyHandleSuccessfulSubmitSpy = sinon.spy(this.realComponent, "handleSuccessfulSubmit");
+            this.spyHandleSuccessfulSubmit = sinon.spy(this.realComponent, "handleSuccessfulSubmit");
         });
+
         it("should allow values of email and password inputs to change", function() {
             ComponentTester.assert.equal(this.realEmailInput.value, "");
             ComponentTester.assert.equal(this.realPasswordInput.value, "");
@@ -87,29 +88,60 @@ describe("RegisterPage", function() {
                 RouteTester.stopServer();
                 RouteTester.forceNewPort();
             });
-            it("should call attemptToRegister method on form submission", function() {
+            it("should call attemptToRegister method on form submission", function(done) {
                 this.realEmailInput.value = "someEmail@email.com";
                 this.realPasswordInput.value = "password";
 
-                ComponentTester.TestUtils.Simulate.submit(this.realForm);
-                ComponentTester.assert.isTrue(this.spyAttemptToRegister.calledOnce);
-                this.spyAttemptToRegister.restore();
+                var component = this;
+
+                var callback = function() {
+                    return ComponentTester.testAsyncMethodSpy(done, "isTrue", component, "spyAttemptToRegister", "calledOnce");
+                };
+
+                console.log("simulating submit...");
+                ComponentTester.TestUtils.Simulate.submit(this.realForm, callback());
+                console.log("submit simulated");
+                /*ComponentTester.assert.isTrue(this.spyAttemptToRegister.calledOnce);
+                done();*/
             });
             it("state should be changed to negative context on bad email", function(done) {
                 this.realEmailInput.value = "bad";
                 this.realPasswordInput.value = "password";
 
-                var expectedState = {
-                    shouldHandleFailedSubmit: true,
-                    failedReason: "message",
-                    shouldHandleSuccessfulSubmit: false,
-                    validCredentials: null
-                };
+                var component = this;
 
-                ComponentTester.TestUtils.Simulate.submit(this.realForm);
-                ComponentTester.assert.deepEqual(expectedState, this.getCurrentState());
+                /*var callback = function() {
+                    return ComponentTester.testAsyncMethodSpy(done, "isTrue", component, "spyHandleFailedSubmit", "calledOnce");
+                };*/
 
-                done();
+                console.log("simulating submit...");
+                ComponentTester.TestUtils.Simulate.submit(this.realForm, ComponentTester.testAsyncMethodSpy(done, "isTrue", component, "spyHandleFailedSubmit", "calledOnce"));
+                console.log("submit simulated");
+
+
+                /*
+                function assert() {
+                    setTimeout(laterAssert,2000);
+                }
+                function laterAssert() {
+                    console.log("starting assertion...");
+                    ComponentTester.assert.isTrue(component.spyHandleFailedSubmit.calledOnce);
+                    component.spyHandleFailedSubmit.restore();
+                    console.log("assertion completed");
+                    done();
+                }
+
+                function sayHello() {
+                    console.log("hello")
+                }
+                process.nextTick(sayHello);
+
+                console.log("simulating submit...");
+                ComponentTester.TestUtils.Simulate.submit(this.realForm, assert());
+                console.log("submit simulated");
+                */
+
+
 
             })
         })

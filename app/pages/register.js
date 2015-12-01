@@ -13,23 +13,17 @@ var RegisterPage = React.createClass({
             success: function(response) {
                 if(response.status == "success") {
                     console.log("attemptToRegister successful request");
-                    this.setState({
-                        shouldHandleSuccessfulSubmit: true,
-                        shouldHandleFailedSubmit: false,
-                        validCredentials: dataToSend,
-                        failedReason: null
-                    });
+                    console.log("email: " + dataToSend.email + " password:  " + dataToSend.password);
+                    console.log("response: " + response.data.message);
                 }
                 else {
                     console.log("attemptToRegister successful request but bad data");
-                    this.setState({
-                        shouldHandleSuccessfulSubmit: false,
-                        shouldHandleFailedSubmit: true,
-                        failedReason: response.data.message,
-                        validCredentials: null
-                    });
+                    console.log("email: " + dataToSend.email + " password:  " + dataToSend.password);
+                    console.log("response: " + response.data.message);
+                    this.handleFailedSubmit(response.data.message);
+                    console.log("this.handleFailedSubmit called");
                 }
-            },
+            }.bind(this),
             error: function(xhr, status, err) {
                 console.log("attemptToRegister error sending request");
                 return err;
@@ -37,7 +31,8 @@ var RegisterPage = React.createClass({
         });
     },
 
-    handleFailedSubmit: function() {
+    handleFailedSubmit: function(failedResponseMessage) {
+        console.log("handleFailedSubmit called");
         this.setState({
             shouldShowErrorMessage: true,
             errorMessage: this.state.failedReason
