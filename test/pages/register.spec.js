@@ -51,11 +51,11 @@ describe("RegisterPage", function() {
             this.spyAttemptToRegister = sinon.spy(this.realComponent, "attemptToRegister");
             this.spyHandleFailedSubmit = sinon.spy(this.realComponent, "handleFailedSubmit");
             this.spyHandleSuccessfulSubmit = sinon.spy(this.realComponent, "handleSuccessfulSubmit");
-            var that = this;
-            spies = [
-                that.spyAttemptToRegister,
-                that.spyHandleFailedSubmit,
-                that.spyHandleSuccessfulSubmit
+
+            this.spies = [
+                this.spyAttemptToRegister,
+                this.spyHandleFailedSubmit,
+                this.spyHandleSuccessfulSubmit
             ];
         });
 
@@ -141,7 +141,7 @@ describe("RegisterPage", function() {
 
 
                 var callback = function() {
-                    return  ComponentTester.testAsyncMethodResultsEqualsExpected(done, "deepEqual", expected, component, "getCurrentState", spies);
+                    return  ComponentTester.testAsyncMethodResultsEqualsExpected(done, "deepEqual", expected, component, "getCurrentState", component.spies);
                 };
 
                 console.log("simulating submit...");
@@ -182,7 +182,6 @@ describe("RegisterPage", function() {
                 };
 
                 ComponentTester.TestUtils.Simulate.submit(this.realForm, callback());
-
             });
 
         })

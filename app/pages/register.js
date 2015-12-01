@@ -25,7 +25,6 @@ var RegisterPage = React.createClass({
     },
 
     handleFailedSubmit: function(failedResponseMessage) {
-        console.log("handleFailedSubmit called");
         this.setState({
             shouldShowErrorMessage: true,
             errorMessage: failedResponseMessage

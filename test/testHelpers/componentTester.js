@@ -60,10 +60,13 @@ exports.testAsyncMethodResultsEqualsExpected = function(doneCallback, equalityAs
 
     function laterAssert() {
         assertions[equalityAssertion](expected, object[methodToReturnResults]());
+        console.log("spies being restored...");
+        for(var count = 0; count < spiesToClear.length; count++) {
+            spiesToClear[count].restore();
+        }
+        console.log("spies restored");
         doneCallback();
     }
     process.nextTick(delay);
-    for(var count = 0; count < spiesToClear.length; count++) {
-        spiesToClear[count].restore();
-    }
+
 };
