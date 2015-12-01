@@ -3,17 +3,53 @@ var $ = require("jquery");
 
 var RegisterPage = React.createClass({
 
-    handleFailedSubmit: function(responseMessage, cb) {
-        this.setState({
-            shouldShowErrorMessage: true,
-            errorMessage: responseMessage
-        }, cb);
+    attemptToRegister: function(dataToSend) {
+        console.log("attemptToRegister firing");
+        $.ajax({
+            url: "http://localhost:8132/users/register",
+            dataType: "json",
+            type: "POST",
+            data: dataToSend,
+            success: function(response) {
+                if(response.status == "success") {
+                    console.log("attemptToRegister successful request");
+                    this.setState({
+                        shouldHandleSuccessfulSubmit: true,
+                        shouldHandleFailedSubmit: false,
+                        validCredentials: dataToSend,
+                        failedReason: null
+                    });
+                }
+                else {
+                    console.log("attemptToRegister successful request but bad data");
+                    this.setState({
+                        shouldHandleSuccessfulSubmit: false,
+                        shouldHandleFailedSubmit: true,
+                        failedReason: response.data.message,
+                        validCredentials: null
+                    });
+                }
+            },
+            error: function(xhr, status, err) {
+                console.log("attemptToRegister error sending request");
+                return err;
+            }
+        });
     },
 
-    handleSuccessfulSubmit: function(responseMessage, credentials, cb) {
+    handleFailedSubmit: function() {
         this.setState({
-            shouldShowErrorMessage: false
-        }, cb);
+            shouldShowErrorMessage: true,
+            errorMessage: this.state.failedReason
+        });
+    },
+
+    handleSuccessfulSubmit: function(credentials) {
+        this.setState({
+            shouldShowErrorMessage : false,
+            errorMessage: null
+        });
+
         $.ajax({
             url: "http://localhost:8132/users/authenticate",
             dataType: "json",
@@ -21,7 +57,7 @@ var RegisterPage = React.createClass({
             data: credentials,
             success: function(response) {
                 if(response.status == "fail") {
-                    console.log(response.data.message);
+
                 }
                 else {
                     localStorage.setItem("token", response.data.token);
@@ -29,45 +65,58 @@ var RegisterPage = React.createClass({
                 }
             }.bind(this),
             error: function(xhr, status, err) {
-                console.log(err);
+                return err;
             }
         });
     },
 
-    handleSubmit: function(e, cb) {
-        if(e){
+    handleSubmit: function(e) {
+        if(e) {
             e.preventDefault();
         }
-
         var dataToSend = {
             email: this.refs.emailInput.value.trim(),
             password: this.refs.passwordInput.value.trim()
         };
+        this.attemptToRegister(dataToSend);
 
-        $.ajax({
+        /*if(attempt = "fail") {
+            return this.handleFailedSubmit("fake");
+        }
+        else {
+            return this.handleSuccessfulSubmit("fake");
+        }*/
+
+
+
+        /*$.ajax({
             url: "http://localhost:8132/users/register",
             dataType: "json",
             type: "POST",
             data: dataToSend,
             success: function(response) {
                 if(response.status == "fail") {
-                    return this.handleFailedSubmit(response.data.message, cb);
+                    return this.handleFailedSubmit(response.data.message);
                 }
                 else {
-                    return this.handleSuccessfulSubmit(response.data.message, dataToSend, cb);
+                    return this.handleSuccessfulSubmit(response.data.message, dataToSend);
                 }
             }.bind(this),
             error: function(xhr, status, err) {
                 console.log(err);
             }
-        });
+        });*/
 
     },
 
     getInitialState: function() {
         return {
             shouldShowErrorMessage : false,
-            errorMessage: null
+            errorMessage: null,
+            shouldHandleSuccessfulSubmit: false,
+            shouldHandleFailedSubmit: false,
+            failedReason: null,
+            validCredentials: null
         }
     },
 
