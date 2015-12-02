@@ -46,7 +46,9 @@ describe("RegisterPage", function() {
             this.realEmailInput = this.realComponent.refs.emailInput;
             this.realPasswordInput = this.realComponent.refs.passwordInput;
             this.realForm = this.realComponent.refs.registerForm;
+
             this.getCurrentState = function() {return this.realComponent.state};
+            this.returnToDefaultState = function() {this.realComponent.setState(this.realComponent.getInitialState());};
 
             this.spyAttemptToRegister = sinon.spy(this.realComponent, "attemptToRegister");
             this.spyHandleFailedSubmit = sinon.spy(this.realComponent, "handleFailedSubmit");
@@ -171,6 +173,18 @@ describe("RegisterPage", function() {
                 ComponentTester.TestUtils.Simulate.submit(this.realForm, callback());
                 console.log("submit simulated");
             });
+            it("should not show error message on default", function() {
+                this.returnToDefaultState();
+                ComponentTester.assert.isUndefined(this.realComponent.refs.errorMessageContainer);
+            });
+            it("should show error message when shouldShowErrorMessage state property becomes true", function() {
+                this.returnToDefaultState();
+                this.realComponent.setState({
+                    shouldShowErrorMessage: true
+                });
+                ComponentTester.assert.isDefined(this.realComponent.refs.errorMessageContainer);
+                this.returnToDefaultState();
+            });
             it("should call handleSuccessfulSubmit method on good credentials", function(done) {
                 this.realEmailInput.value = "goodEmail@email.com";
                 this.realPasswordInput.value = "password";
@@ -180,9 +194,9 @@ describe("RegisterPage", function() {
                 var callback = function() {
                     return ComponentTester.testAsyncMethodSpy(done, "isTrue", component, "spyHandleSuccessfulSubmit", "calledOnce");
                 };
-
                 ComponentTester.TestUtils.Simulate.submit(this.realForm, callback());
             });
+
 
         })
 

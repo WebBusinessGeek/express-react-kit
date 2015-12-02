@@ -83,7 +83,7 @@ var RegisterPage = React.createClass({
                 <form id="registerForm" className="form-horizontal col-sm-6 col-sm-offset-3" ref="registerForm" onSubmit={this.handleSubmit}>
 
                     { this.state.shouldShowErrorMessage ?
-                        <div id="errorMessageContainer" className="col-sm-12 text-center"> <p id="errorMessage"> {this.state.errorMessage} </p> </div>
+                        <div ref="errorMessageContainer" id="errorMessageContainer" className="col-sm-12 text-center"> <p id="errorMessage"> {this.state.errorMessage} </p> </div>
                         : null
                     }
 
